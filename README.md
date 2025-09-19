@@ -12,7 +12,7 @@ Este proyecto implementa un tester en Bash para analizar vulnerabilidades relaci
 - cut, grep
 
 
-## Uso del programa
+## Uso del makefile
 
 ```
 # Preparación
@@ -43,3 +43,23 @@ Verifica registros A/CNAME y escribe salidas en `out/` para revisión.
 
 - `DNS_SERVER`: Servidor DNS para consultas
 
+---
+
+## `app.py`
+
+Aplicación demo hecha con Flask incluida para pruebas locales, contiene vulnerabilidades intencionales que los checkers deben detectar .
+
+### Endpoints:
+  - `GET /` — página principal con cabeceras intencionales y cookie de sesión sin flags.
+  - `GET /headers` — devuelve en JSON las cabeceras de la petición.
+  - `GET /boom` — fuerza una excepción para mostrar stacktrace cuando `debug=True`.
+  - `GET /health` — healthcheck simple.
+
+
+### Uso del programa
+```bash
+
+pip install -U pip flask
+# Arrancar la app 
+python3 app/app.py
+```
