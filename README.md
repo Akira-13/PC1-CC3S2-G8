@@ -11,6 +11,7 @@ Este proyecto implementa un tester en Bash para analizar vulnerabilidades relaci
 - dig
 - cut, grep
 
+
 ## Uso del programa
 
 ```
