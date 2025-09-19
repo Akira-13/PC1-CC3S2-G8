@@ -12,7 +12,7 @@ Este proyecto implementa un tester en Bash para analizar vulnerabilidades relaci
 - cut, grep
 
 
-## Uso del programa
+## Uso del makefile
 
 ```
 # Preparación
@@ -63,4 +63,3 @@ pip install -U pip flask
 # Arrancar la app 
 python3 app/app.py
 ```
-
