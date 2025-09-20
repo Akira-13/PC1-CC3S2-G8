@@ -15,16 +15,19 @@ Este proyecto implementa un tester en Bash para analizar vulnerabilidades relaci
 ## Uso del makefile
 
 ```
-# Preparación
-chmod +x src/dns_check.sh src/http_check.sh
+# Requisitos y permisos
 make tools
+chmod +x src/dns_check.sh src/http_check.sh
 
-# Ejecutar mediciones 
-make build TARGET_URL=https://example.com DNS_SERVER=1.1.1.1
-make run
+# Medición (elige URL con esquema y resolver válido)
+make build TARGET_URL=https://www.wikipedia.org DNS_SERVER=1.1.1.1
 
-# Pruebas 
-make test
+# Parsing y logs
+make parse
+make logs
+
+# Sockets (ss o netstat según disponibilidad)
+make sockets
 ```
 
 ## Scripts
