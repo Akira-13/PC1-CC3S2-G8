@@ -34,18 +34,43 @@ make sockets
 
 ### `http_check.sh`
 
-Realiza una revisión de respuesta HTTP/HTTPS con curl y genera archivos en `out/` para revisión.
+Script robusto para validar conexiones HTTP/HTTPS:
+- Obtiene código de estado, cabeceras y traza detallada (`curl -v`).
+- Usa `set -euo pipefail` y `trap` para limpieza e idempotencia.
+- Maneja errores de red con salidas intermedias en `tmp/` que solo se mueven a `out/` si son válidas.
+- Devuelve códigos de salida diferenciados:
+  - 10 = configuración ausente (`TARGET_URL`)
+  - 20 = dependencia faltante (`curl`)
+  - 30 = fallo de red
+  - 50 = error interno
+- Genera archivos reproducibles en `out/`:
+  - `<proto>_code.txt` — código HTTP
+  - `<proto>_headers.txt` — cabeceras
+  - `<proto>_trace.txt` — traza de conexión
 
 ### `dns_check.sh`
 
-Verifica registros A/CNAME y escribe salidas en `out/` para revisión.
+Script robusto para validar resolución DNS de un host:
+- Usa `set -euo pipefail` y `trap` para limpieza e idempotencia.
+- Consulta registros **A** y **CNAME** usando `dig` con `+tries` y `+time`.
+- Filtra salidas para separar correctamente A y CNAME en archivos distintos.
+- Parseo de TTL con `awk` para reporte reducido.
+- Maneja errores de red con salidas intermedias en `tmp/` que solo se mueven a `out/` si son válidas.
+- Códigos de salida diferenciados:
+  - 10 = configuración ausente (`DNS_SERVER` o `TARGET_URL`)
+  - 20 = dependencia faltante (`dig`, `awk`)
+  - 30 = fallo DNS/red
+  - 50 = error interno
+- Genera archivos reproducibles en `out/`:
+  - `dns_a.txt` — registros A
+  - `dns_cname.txt` — registros CNAME
 
 ## Variables de entorno
 
 - `TARGET_URL`: URL objetivo para chequeos HTTP/HTTPS
-
 - `DNS_SERVER`: Servidor DNS para consultas
 
+> Nota: los códigos de salida de los scripts están documentados en `docs/contrato-salidas.md`.
 ---
 
 ## `app.py`
