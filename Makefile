@@ -3,7 +3,7 @@ SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 
 TARGET_URL ?=
-DNS_SERVER ?=
+DNS_SERVER ?= 
 
 SRC_DIR  := src
 OUT_DIR  := out
@@ -55,6 +55,33 @@ test:
 clean: 
 	@rm -rf "$(OUT_DIR)"
 	@echo "Limpieza completa."
+
+# ===== Sprint 2: extras =====
+PARSE_DIR := out
+HAS_SS      := $(shell command -v ss >/dev/null 2>&1 && echo yes || echo no)
+HAS_NETSTAT := $(shell command -v netstat >/dev/null 2>&1 && echo yes || echo no)
+
+.PHONY: sockets logs parse
+
+sockets: 
+	@mkdir -p out
+	@if [ "$(HAS_SS)" = "yes" ]; then \
+	  echo ">> ss -tupan"; ss -tupan | tee out/sockets.txt; \
+	elif [ "$(HAS_NETSTAT)" = "yes" ]; then \
+	  echo ">> netstat -ano"; netstat -ano | tee out/sockets.txt; \
+	else \
+	  echo "No hay 'ss' ni 'netstat' disponibles"; exit 1; \
+	fi
+
+logs: 
+	@mkdir -p out
+	@{ \
+	  echo "=== DNS A (head) ===";       head -n 20 out/dns_a.txt       2>/dev/null || true; \
+	  echo "=== DNS CNAME (head) ===";   head -n 20 out/dns_cname.txt   2>/dev/null || true; \
+	  echo "=== HEADERS (head) ===";     head -n 20 out/*_headers.txt   2>/dev/null || true; \
+	  echo "=== TRACE (head) ===";       head -n 40 out/*_trace.txt     2>/dev/null || true; \
+	} | tee out/logs.txt >/dev/null
+	@echo "Logs en out/logs.txt"
 
 $(OUT_DIR):
 	@mkdir -p "$@"
