@@ -52,7 +52,6 @@ $(STAMP): | $(CACHE_DIR)
 	@cmp -s $@.tmp $@ 2>/dev/null || mv $@.tmp $@
 	@rm -f $@.tmp
 
-out: ; @mkdir -p "$(OUT_DIR)"
 
 $(DNS_A) $(DNS_CNAME): $(SRC_DNS) $(STAMP) | out
 	@echo "[S3] DNS: comprobando caché…"
